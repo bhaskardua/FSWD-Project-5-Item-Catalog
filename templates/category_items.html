@@ -1,0 +1,27 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+		<head>
+				<meta charset="UTF-8">
+				<title>Category List</title>
+		</head>
+		<body>
+				<h1>{{category_name}}</h1>
+				<ul>
+						{% for item in items %}
+								<li><a href="{{ url_for('itemDetails', category_name=category_name, item_name=item.name) }}">{{item.name}}</a></li>
+						{% endfor %}
+				</ul>
+				<a href="{{ url_for('itemAdd') }}">Add Item</a>
+		</body>
+</html> -->
+
+{% extends "base.html" %}
+{% block content %}
+	<h1>{{category_name}}</h1>
+	<ul>
+		{% for item in items %}
+			<li><p><a href="{{ url_for('itemDetails', category_name=category_name, item_name=item.name) }}">{{item.name}}</a></p></li>
+		{% endfor %}
+	</ul>
+	<a href="{{ url_for('itemAdd') }}">Add Item</a>
+{% endblock %}

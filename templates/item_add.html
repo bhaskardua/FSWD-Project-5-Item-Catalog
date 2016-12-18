@@ -1,0 +1,62 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+		<head>
+				<meta charset="UTF-8">
+				<title>Add Item</title>
+		<style type="text/css">
+			label {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Add Item</h1>
+			<form method="post">
+				<label>
+					Title
+					<input type="text" name="name">
+				</label>
+				<label>
+					Description
+					<textarea name="description"></textarea>
+				</label>
+				<label>
+					Category
+					<select name="category">
+						<option value="" selected disabled>Select your option</option>
+						{% for category in categories %}
+							<option value="{{category.id}}">{{category.name}}</option>
+						{% endfor %}
+					</select>
+				</label>
+				<input type="submit">
+			</form>
+		</div>
+	</body>
+</html> -->
+
+{% extends "base.html" %}
+{% block content %}
+	<h1>Add Item</h1>
+	<form method="post">
+		<label>
+			Title
+			<input type="text" name="name">
+		</label>
+		<label>
+			Description
+			<textarea name="description"></textarea>
+		</label>
+		<label>
+			Category
+			<select name="category">
+				<option value="" selected disabled>Select your option</option>
+				{% for category in categories %}
+					<option value="{{category.id}}">{{category.name}}</option>
+				{% endfor %}
+			</select>
+		</label>
+		<input type="submit">
+	</form>
+{% endblock %}
