@@ -13,6 +13,7 @@ import requests
 
 app = Flask(__name__)
 
+# Connect to Database and create database session
 engine = create_engine('postgresql:///catalogwithusers')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -109,15 +110,11 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # see if user exists, if it doesn't make a new one
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
-
-    print login_session
-    # print login_session['username']
-    # print login_session['picture']
-    # print login_session['email']
 
     output = ''
     output += '<h1>Welcome, '
@@ -131,13 +128,12 @@ def gconnect():
     return output
 
 
+# DISCONNECT - Revoke a current user's token and reset their login_session
+
+
 @app.route('/gdisconnect')
 def gdisconnect():
-    # print login_session['credentials']
-    # print type(login_session['credentials'])
-    # print json.loads(login_session['credentials'])
-    # login_session['access_token'] = json.loads(login_session['credentials'])['access_token']
-    print login_session
+    # Only disconnect a connected user.
     access_token = login_session['access_token']
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
@@ -153,7 +149,6 @@ def gdisconnect():
     print 'result is '
     print result
     if result['status'] == '200':
-        # del login_session['credentials']
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
@@ -171,7 +166,7 @@ def gdisconnect():
         return response
 
 
-# Add JSON API endpoint here
+# Add JSON API endpoints here
 @app.route('/catalog.json')
 def catalogJSON():
     categoryList = []
@@ -187,7 +182,7 @@ def catalogJSON():
     return jsonify(Category=categoryList)
 
 
-@app.route('/catalog/JSON/categories')
+@app.route('/catalog/JSON/categories/')
 def catalogListJSON():
     categories = session.query(Category).all()
     return jsonify(Category=[category.name for category in categories])
@@ -213,6 +208,7 @@ def itemDetailsJSON(category_name, item_name):
     return jsonify(item.serialize)
 
 
+# Show all categories
 @app.route('/')
 @app.route('/catalog/')
 def catalog():
@@ -220,7 +216,7 @@ def catalog():
     return render_template('main.html', categories=categories)
 
 
-# ROUTING
+# Show items in a particular category
 @app.route('/catalog/<category_name>/')
 @app.route('/catalog/<category_name>/items/')
 def categoryItems(category_name):
@@ -235,6 +231,7 @@ def categoryItems(category_name):
                                category_name=category_name, items=items)
 
 
+# Show details of a particular item
 @app.route('/catalog/<category_name>/<item_name>/')
 def itemDetails(category_name, item_name):
     item = session.query(Items).filter_by(name=item_name).one()
@@ -247,6 +244,7 @@ def itemDetails(category_name, item_name):
                                item_description=item.description)
 
 
+# Add an item to the catalog
 @app.route('/catalog/add/', methods=['GET', 'POST'])
 def itemAdd():
     print "login session: "
@@ -275,6 +273,7 @@ def itemAdd():
     return render_template("item_add.html", categories=categories)
 
 
+# Edit an item
 @app.route('/catalog/<item_name>/edit/', methods=['GET', 'POST'])
 def itemEdit(item_name):
     editedItem = session.query(Items).filter_by(name=item_name).one()
@@ -298,6 +297,7 @@ def itemEdit(item_name):
                            categories=categories)
 
 
+# Delete an item
 @app.route('/catalog/<item_name>/delete/', methods=['GET', 'POST'])
 def itemDelete(item_name):
     itemToDelete = session.query(Items).filter_by(name=item_name).one()

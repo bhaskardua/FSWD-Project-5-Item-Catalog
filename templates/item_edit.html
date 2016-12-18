@@ -1,39 +1,5 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-		<head>
-				<meta charset="UTF-8">
-				<title>Edit Item</title>
-		</head>
-		<body>
-				<h1>Edit {{item.name}}</h1>
-				<form method="post">
-						<label>
-								Title
-								<input type="text" name="name" placeholder="{{item.name}}">
-						</label>
-						<label>
-								Description
-								<textarea name="description">{{item.description}}</textarea>
-						</label>
-						<label>
-								Category
-								<select name="category">
-										{% for category in categories %}
-												{% if category.id == item.category_id %}
-														<option value="{{category.id}}" selected>{{category.name}}</option>
-												{% else %}
-														<option value="{{category.id}}">{{category.name}}</option>
-												{% endif %}
-										{% endfor %}
-								</select>
-						</label>
-						<input type="submit" value="Edit">
-						<a href="{{ url_for('itemDetails', category_name=item.id, item_name=item.name) }}">Cancel</a>
-				</form>
-		</body>
-</html> -->
-
 {% extends "base.html" %}
+
 {% block content %}
 	<h1>Edit {{item.name}}</h1>
 	<form method="post">
