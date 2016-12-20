@@ -12,9 +12,10 @@ from flask import make_response
 import requests
 
 app = Flask(__name__)
+app.secret_key = "super_secret_key"
 
 # Connect to Database and create database session
-engine = create_engine('postgresql:///catalogwithusers')
+engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
